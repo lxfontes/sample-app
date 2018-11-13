@@ -1,0 +1,9 @@
+source:
+  url: "https://github.com/lxfontes/sample-app"
+  revision: "master"
+
+build:
+  registry: "https://index.docker.io/v1/"
+  image: lxfontes/sample-app
+  username: lxfontes
+  password: "" # <- where to store these?

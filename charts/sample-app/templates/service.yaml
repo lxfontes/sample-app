@@ -1,0 +1,32 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+spec:
+  runLatest:
+    configuration:
+      build:
+        apiVersion: build.knative.dev/v1alpha1
+        kind: Build
+        spec:
+          serviceAccountName: {{ template "fullname" . }}-sa
+          source:
+            git:
+              url: {{ .Values.source.url }}
+              revision: {{ .Values.source.revision }}
+          template:
+            name: kaniko
+            arguments:
+            - name: IMAGE
+              value: {{ .Values.build.image }}:latest
+      revisionTemplate:
+        spec:
+          container:
+            image: {{ .Values.build.image }}:latest
+            imagePullPolicy: Always
+            env:
+            - name: MSG
+              value: "Hello from the sample app!"
